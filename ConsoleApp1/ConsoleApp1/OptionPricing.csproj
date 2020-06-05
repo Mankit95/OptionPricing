@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinomialGreeks.cs" />
     <Compile Include="BinomialPricer.cs" />
     <Compile Include="BSGreeks.cs" />
     <Compile Include="BSPricer.cs" />

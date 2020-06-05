@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Princing
+namespace OptionPricing
 {
     class BSGreeks : BSPricer, GreeksInterface
     {

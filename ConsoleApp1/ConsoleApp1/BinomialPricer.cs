@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Princing
+namespace OptionPricing
 {
     class BinomialPricer : PricerInterface
     {
@@ -73,28 +73,37 @@ namespace Princing
                     St[i, j] = S * Math.Pow(u, (double)(i - j)) * Math.Pow(d, (double)j);
                 }
             }
-            for (int i = 0; i < Steps + 1; i++)
+            for (int i = Steps; i >= 0; i--)
             {
                 for (int j = 0; j < i + 1; j++)
                 {
-
+                    if (i == Steps)
+                    {
+                        C[i, j] = Payoff(St[i, j], K, Option);
+                    }
+                    else
+                    {
+                        C[i, j] = Math.Max(Payoff(St[i, j], K, Option), 1 / Math.Exp(R * (T / Steps)) * (p * C[i + 1, j] + q * C[i + 1, j + 1]));
+                    }
+                    
                 }
             }
+            return C[0, 0];
 
         }
 
         // Up and Down factors
-        private double OptionUp(double t, double s, int n)
+        public double OptionUp(double t, double s, int n)
         {
             return Math.Exp(s * Math.Sqrt(t / n));
         }
-        private double OptionDown(double t, double s, int n)
+        public double OptionDown(double t, double s, int n)
         {
             return Math.Exp(-s * Math.Sqrt(t / n));
         }
 
         // Up probability calculation
-        private double Probability(double t, double s, int n, double r)
+        public double Probability(double t, double s, int n, double r)
         {
             double d1 = Math.Exp(r * (t / n));
             double d2 = OptionUp(t, s, n);
@@ -103,29 +112,29 @@ namespace Princing
         }
 
         // Payoff
-        private double Payoff(double S, double X, char CallorPut)
+        public double Payoff(double S, double K, char CallorPut)
         {
             switch (CallorPut)
             {
                 case 'c':
-                    return Call(S, X);
+                    return Call(S, K);
 
                 case 'p':
-                    return Put(S, X);
+                    return Put(S, K);
 
                 default:
                     return 0.0;
             }
         }
 
-        private double Call(double S, double X)
+        private double Call(double S, double K)
         {
-            return Math.Max(0.0, S - X);
+            return Math.Max(0.0, S - K);
         }
 
-        private double Put(double S, double X)
+        private double Put(double S, double K)
         {
-            return Math.Max(0.0, X - S);
+            return Math.Max(0.0, K - S);
         }
 
     }

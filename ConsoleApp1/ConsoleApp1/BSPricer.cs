@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Princing
+namespace OptionPricing
 {
     /*
     *  Implemeting the Black Scholes Opton pricing method.(for European type option)

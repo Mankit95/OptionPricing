@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace OptionPricing
 {
-    class BinomialGreeks : BinomialPricer, GreeksInterface
+    class BinomialGreeks : BinomialPricer//, GreeksInterface
     {
+        private double Delta;
+        private double Gamma;
+        private double Vega;
+        private double Theta;
+
         // constructor calls the Pricer default constructor 
         public BinomialGreeks()
             : base()
@@ -58,6 +63,13 @@ namespace OptionPricing
                     }
                 }
             }
+            Delta = (C[1, 0] - C[0, 0]) / (St[1, 0] - St[0, 0]);
+            
+        }
+
+        public double delta()
+        {
+            return Delta;
         }
     }
 }

@@ -12,6 +12,5 @@ namespace OptionPricing
         double gamma();
         double theta();
         double vega();
-        double rho();
     }
 }

@@ -55,39 +55,43 @@ namespace OptionPricing
 
         // Cumulative normal fuction
         // Abromowitz and Stegun approximation
-        public static double CND(double z)
+        public double CND(double X)
         {
-            double p = 0.3275911;
-            double a1 = 0.254829592;
-            double a2 = -0.284496736;
-            double a3 = 1.421413741;
-            double a4 = -1.453152027;
-            double a5 = 1.061405429;
+            double L = 0.0;
+            double K = 0.0;
+            double dCND = 0.0;
+            const double a1 = 0.31938153;
+            const double a2 = -0.356563782;
+            const double a3 = 1.781477937;
+            const double a4 = -1.821255978;
+            const double a5 = 1.330274429;
+            L = Math.Abs(X);
+            K = 1.0 / (1.0 + 0.2316419 * L);
+            dCND = 1.0 - 1.0 / Math.Sqrt(2 * Convert.ToDouble(Math.PI.ToString())) *
+                Math.Exp(-L * L / 2.0) * (a1 * K + a2 * K * K + a3 * Math.Pow(K, 3.0) +
+                a4 * Math.Pow(K, 4.0) + a5 * Math.Pow(K, 5.0));
 
-            int sign;
-            if (z < 0.0)
-                sign = -1;
+            if (X < 0)
+            {
+                return 1.0 - dCND;
+            }
             else
-                sign = 1;
-
-            double x = Math.Abs(z) / Math.Sqrt(2.0);
-            double t = 1.0 / (1.0 + p * x);
-            double erf = 1.0 - (((((a5 * t + a4) * t) + a3)
-              * t + a2) * t + a1) * t * Math.Exp(-x * x);
-            return 0.5 * (1.0 + sign * erf);
+            {
+                return dCND;
+            }
         }
 
 
         // calculating d1 and d2
         public double d1()
         {
-            double D1 = (Math.Log10(S / K) + (R + Vol * Vol * 0.5) * T) / (Vol * Math.Sqrt(T));
+            double D1 = (Math.Log(S / K) + (R + Vol * Vol * 0.5) * T) / (Vol * Math.Sqrt(T));
             return D1;
         }
 
         public double d2()
         {
-            double D2 = (Math.Log10(S / K) + (R - Vol * Vol * 0.5) * T) / (Vol * Math.Sqrt(T));
+            double D2 = (Math.Log(S / K) + (R - Vol * Vol * 0.5) * T) / (Vol * Math.Sqrt(T));
             return D2;
         }
 
@@ -97,7 +101,7 @@ namespace OptionPricing
         {
             if (Option.Equals('c'))
             {
-                double price = S * CND(d1()) - CND(d2() * K * Math.Exp(-R * T));
+                double price = S * CND(d1()) - CND(d2()) * K * Math.Exp(-R * T);
                 return price;
             }
             else if (Option.Equals('p'))

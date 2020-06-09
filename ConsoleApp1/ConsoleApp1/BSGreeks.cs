@@ -110,27 +110,6 @@ namespace OptionPricing
             }
         }
 
-        // method to calculate rho : The partial with respect to the interest rate. 
-        public double rho()
-        {
-            if (Option.Equals('c'))
-            {
-                double rho_ = K * T * Math.Exp(-R * T) * CND(d2());
-                return rho_;
-            }
-            else if (Option.Equals('p'))
-            {
-                double rho_ = -K * T * Math.Exp(-R * T) * CND(-d2());
-                return rho_;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-
-
     }
 
 }
